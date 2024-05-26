@@ -23,7 +23,7 @@ set(CMAKE_CUDA_STANDARD_REQUIRED ON)
 include_directories(${CMAKE_SOURCE_DIR}/include)
 
 # Find all .cu files in the src directory
-file(GLOB SOURCES "src/*.cu")
+file(GLOB SOURCES "src/*/*.cu" "src/*.cu")
 
 # Add executable
 add_executable(MyCudaProject ${SOURCES})
