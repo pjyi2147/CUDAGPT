@@ -83,20 +83,8 @@ void layernorm(float *d_a, float *d_norm, int N, int M) {
     d_mean<<<numBlocks, BLOCK_SIZE>>>(d_padA, d_m, redArr1, N, M);
 
     float *norm = (float *)malloc(N * sizeof(float));
-    cudaMemcpy(norm, d_m, N * sizeof(float), cudaMemcpyDeviceToHost);
-    printf("mean: ");
-    for (int i = 0; i < N; i++) {
-        printf("%f ", norm[i]);
-    }
 
     d_var<<<numBlocks, BLOCK_SIZE>>>(d_padA, d_v, d_m, redArr1, N, M);
-
-    cudaMemcpy(norm, d_v, N * sizeof(float), cudaMemcpyDeviceToHost);
-    printf("\nvar: ");
-    for (int i = 0; i < N; i++) {
-        printf("%f ", norm[i]);
-    }
-    printf("\n");
 
     d_layernorm<<<numBlocks, BLOCK_SIZE>>>(d_padA, d_padN, d_m, d_v, N, M);
 
@@ -108,7 +96,6 @@ void layernorm(float *d_a, float *d_norm, int N, int M) {
     cudaFree(d_m);
     cudaFree(d_v);
     cudaFree(redArr1);
-    free(norm);
 }
 
 void layernorm_test() {
