@@ -1,3 +1,4 @@
+#include <cstdio>
 #include "ops/transpose.h"
 
 __global__ void d_transpose(float *d_A, float *d_T, int M, int N)
@@ -18,5 +19,26 @@ void transpose(float *d_A, float *d_T, int M, int N)
 
 void transpose_test()
 {
+    int row = 4, col = 3;
+    float A[12] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
 
+    float *d_A, *d_T;
+    cudaMalloc(&d_A, row * col * sizeof(float));
+    cudaMalloc(&d_T, col * row * sizeof(float));
+
+    cudaMemcpy(d_A, A, row * col * sizeof(float), cudaMemcpyHostToDevice);
+
+    transpose(d_A, d_T, row, col);
+
+    float T[col * row];
+    cudaMemcpy(T, d_T, col * row * sizeof(float), cudaMemcpyDeviceToHost);
+
+    printf("transpose test, T: \n");
+    for (int i = 0; i < col; i++) {
+        for (int j = 0; j < row; j++) {
+            printf("%f ", T[i * row + j]);
+        }
+        printf("\n");
+    }
+    printf("transpose test done\n\n");
 }

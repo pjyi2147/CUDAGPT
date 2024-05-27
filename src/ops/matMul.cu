@@ -1,3 +1,4 @@
+#include <cstdio>
 #include "ops/matMul.h"
 
 __global__ void d_matmul(float *d_A, float *d_B, float *d_C, int M, int N) {
@@ -19,7 +20,30 @@ void matMul(float *d_A, float *d_B, float *d_C, int M, int N) {
     d_matmul<<<gridDim, blockDim>>>(d_A, d_B, d_C, M, N);
 }
 
-void matMul_test()
-{
+void matMul_test() {
+    int rowa = 2, cola = 3, rowb = 3, colb = 2;
+    float a[6] = {1, 2, 3, 4, 5, 6};
+    float b[6] = {1, 2, 3, 4, 5, 6};
+    float c[4] = {0, 0, 0, 0};
 
+    float *d_a, *d_b, *d_c;
+    cudaMalloc(&d_a, rowa * cola * sizeof(float));
+    cudaMalloc(&d_b, rowb * colb * sizeof(float));
+    cudaMalloc(&d_c, rowa * colb * sizeof(float));
+
+    cudaMemcpy(d_a, a, rowa * cola * sizeof(float), cudaMemcpyHostToDevice);
+    cudaMemcpy(d_b, b, rowb * colb * sizeof(float), cudaMemcpyHostToDevice);
+
+    matMul(d_a, d_b, d_c, rowa, colb);
+
+    cudaMemcpy(c, d_c, rowa * colb * sizeof(float), cudaMemcpyDeviceToHost);
+
+    printf("matMul test, c: \n");
+    for (int i = 0; i < rowa; i++) {
+        for (int j = 0; j < colb; j++) {
+            printf("%f ", c[i * colb + j]);
+        }
+        printf("\n");
+    }
+    printf("matMul test done\n\n");
 }

@@ -1,10 +1,21 @@
 #include <iostream>
+#include "ops/layernorm.h"
+#include "ops/matMul.h"
+#include "ops/matScale.h"
+#include "ops/relu.h"
 #include "ops/softmax.h"
+#include "ops/transpose.h"
+#include "ops/vectAdd.h"
 
 int main() {
     // tests
+    layernorm_test();
+    matMul_test();
+    matScale_test();
+    relu_test();
+    transpose_test();
     softmax_test();
-
+    vectAdd_test();
     return 0;
 }
 

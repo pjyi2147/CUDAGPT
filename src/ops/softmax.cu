@@ -83,10 +83,12 @@ void softmax_test()
 
     cudaMemcpy(output, d_out, rows * cols * sizeof(float), cudaMemcpyDeviceToHost);
 
+    printf("softmax test:\n");
     for (int i = 0; i < rows; ++i) {
         for (int j = 0; j < cols; ++j) {
             printf("%f ", output[i * cols + j]);
         }
         printf("\n");
     }
+    printf("softmax test done\n\n");
 }
