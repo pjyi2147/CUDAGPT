@@ -6,6 +6,7 @@
 #include "ops/softmax.h"
 #include "ops/transpose.h"
 #include "ops/vectAdd.h"
+#include "model/linear.h"
 
 int main() {
     // tests
@@ -16,6 +17,8 @@ int main() {
     transpose_test();
     softmax_test();
     vectAdd_test();
+    vectBatchAdd_test();
+    linear_test();
     return 0;
 }
 

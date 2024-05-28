@@ -1,7 +1,7 @@
 #include <cstdio>
 #include "ops/matMul.h"
 
-__global__ void d_matmul(float *d_A, float *d_B, float *d_C, int M, int N) {
+__global__ void d_matmul(const float *d_A, const float *d_B, float *d_C, int M, int N) {
     // TODO: Implement matmul
     int row = blockIdx.y * blockDim.y + threadIdx.y;
     int col = blockIdx.x * blockDim.x + threadIdx.x;
@@ -14,7 +14,7 @@ __global__ void d_matmul(float *d_A, float *d_B, float *d_C, int M, int N) {
     }
 }
 
-void matMul(float *d_A, float *d_B, float *d_C, int M, int N) {
+void matMul(const float *d_A, const float *d_B, float *d_C, int M, int N) {
     dim3 blockDim(32, 32);
     dim3 gridDim((N + blockDim.x - 1) / blockDim.x, (N + blockDim.y - 1) / blockDim.y);
     d_matmul<<<gridDim, blockDim>>>(d_A, d_B, d_C, M, N);
