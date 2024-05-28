@@ -81,12 +81,13 @@ void layernorm(float *d_a, float *d_norm, int N, int M) {
     }
 
     d_mean<<<numBlocks, BLOCK_SIZE>>>(d_padA, d_m, redArr1, N, M);
-
-    float *norm = (float *)malloc(N * sizeof(float));
+    cudaDeviceSynchronize();
 
     d_var<<<numBlocks, BLOCK_SIZE>>>(d_padA, d_v, d_m, redArr1, N, M);
+    cudaDeviceSynchronize();
 
     d_layernorm<<<numBlocks, BLOCK_SIZE>>>(d_padA, d_padN, d_m, d_v, N, M);
+    cudaDeviceSynchronize();
 
     for (int i = 0; i < N; i++) {
         cudaMemcpy(d_norm + i * M, d_padN + i * padM, M * sizeof(float), cudaMemcpyDeviceToDevice);
