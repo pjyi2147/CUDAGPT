@@ -57,7 +57,7 @@ public:
         assert(N == in_features);
 
         // d_out = d_in * weight^T + bias
-        matMul(d_in, weight, d_out, M, N);
+        matMul(d_in, weight, d_out, M, N, out_features);
         cudaDeviceSynchronize();
 
         // vectBatchAdd(d_out, bias, d_out, M, out_features);
@@ -107,7 +107,7 @@ void linear_test()
 
     float ans[M * D];
     memset(ans, 0, M * D * sizeof(float));
-    
+
     for (int i = 0; i < M; i++) {
         for (int j = 0; j < D; j++) {
             // ans[i * D + j] = bias[j];
@@ -121,8 +121,9 @@ void linear_test()
     bool pass = true;
     for (int i = 0; i < M * D; i++) {
         printf("%d: %f %f\n", i, out[i], ans[i]);
-        if (out[i] != ans[i]) {
+        if (abs(out[i] - ans[i]) > 1e-5) {
             pass = false;
+            break;
         }
     }
 

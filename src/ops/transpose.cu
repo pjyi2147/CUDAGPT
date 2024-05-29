@@ -1,7 +1,7 @@
 #include <cstdio>
 #include "ops/transpose.h"
 
-__global__ void d_transpose(float *d_A, float *d_T, int M, int N)
+__global__ void d_transpose(const float *d_A, float *d_T, int M, int N)
 {
     int row = blockIdx.y * blockDim.y + threadIdx.y;
     int col = blockIdx.x * blockDim.x + threadIdx.x;
@@ -10,7 +10,7 @@ __global__ void d_transpose(float *d_A, float *d_T, int M, int N)
     }
 }
 
-void transpose(float *d_A, float *d_T, int M, int N)
+void transpose(const float *d_A, float *d_T, int M, int N)
 {
     dim3 blockDim(32, 32);
     dim3 gridDim((N + blockDim.x - 1) / blockDim.x, (M + blockDim.y - 1) / blockDim.y);
