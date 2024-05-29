@@ -60,8 +60,8 @@ public:
         matMul(d_in, weight, d_out, M, N, out_features);
         cudaDeviceSynchronize();
 
-        // vectBatchAdd(d_out, bias, d_out, M, out_features);
-        // cudaDeviceSynchronize();
+        vectBatchAdd(d_out, bias, d_out, M, out_features);
+        cudaDeviceSynchronize();
     }
 };
 
@@ -110,7 +110,7 @@ void linear_test()
 
     for (int i = 0; i < M; i++) {
         for (int j = 0; j < D; j++) {
-            // ans[i * D + j] = bias[j];
+            ans[i * D + j] = bias[j];
             for (int k = 0; k < N; k++) {
                 ans[i * D + j] += in[i * N + k] * weight[k * D + j];
             }
@@ -120,7 +120,6 @@ void linear_test()
     // verify
     bool pass = true;
     for (int i = 0; i < M * D; i++) {
-        printf("%d: %f %f\n", i, out[i], ans[i]);
         if (abs(out[i] - ans[i]) > 1e-5) {
             pass = false;
             break;
